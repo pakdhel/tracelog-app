@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tracelog_app/providers/geolocator_provider.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
 import 'package:tracelog_app/screens/widgets/listtile_location_widget.dart';
 import 'package:tracelog_app/screens/widgets/search_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final locationAsync = ref.watch(geolocatorProvider);
 
     return Scaffold(
       body: Padding(
@@ -36,7 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
 
-                    Text('Location History', style: textTheme.headlineMedium),
+                    Text(
+                      'Location History',
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: colorScheme.primary,
+                      ),
+                    ),
                   ],
                 ),
 
@@ -79,12 +82,21 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 8),
 
             ListtileLocationWidget(),
+
+            locationAsync.when(
+              error: (err, stack) => Text('error $err'),
+              loading: () => CircularProgressIndicator(),
+              data: (data) => Text('$data'),
+            ),
+
+            // Text('data'),
           ],
         ),
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () =>
+            ref.read(geolocatorProvider.notifier).addLocationManually(),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(100),
         ),
