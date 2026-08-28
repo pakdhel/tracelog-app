@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
+import 'package:tracelog_app/screens/widgets/listtile_location_widget.dart';
 import 'package:tracelog_app/screens/widgets/search_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -59,8 +60,35 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 12),
 
             SearchWidget(),
+
+            SizedBox(height: 12),
+
+            Row(
+              children: [
+                Text('Monday, 24 Aug 2026', style: textTheme.titleMedium),
+                const Spacer(),
+                Text(
+                  '3 stops',
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 8),
+
+            ListtileLocationWidget(),
           ],
         ),
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(100),
+        ),
+        child: Icon(Icons.add),
       ),
     );
   }
