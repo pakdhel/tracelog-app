@@ -1,58 +1,58 @@
 import 'dart:io';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:tracelog_app/static/location_permission_state.dart';
 
 class GeolocatorService {
-  Future<void> _requestPermission() async {
+  Future<void> checkLocationAcess() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      throw Exception('Location services are disabled.');
+      throw LocationDisabledException(
+        'Please enable location services to continue.',
+      );
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // return false;
-        throw Exception('Location permission denied.');
+        throw LocationPermissionDeniedException(
+          'Please allow location access to continue.',
+        );
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // return false;
-      throw Exception('Location permission denied forever.');
+      throw LocationPermissionDeniedForeverException(
+        'Location access is blocked. Please enable it from your device settings.',
+      );
     }
-    // return true;
   }
 
   Future<Position> getCurrentLocationByCoordinates() async {
-    try {
-      await _requestPermission();
+    await checkLocationAcess();
 
-      late LocationSettings locationSettings;
+    late LocationSettings locationSettings;
 
-      if (Platform.isAndroid) {
-        locationSettings = AndroidSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 100,
-        );
-      } else if (Platform.isIOS) {
-        locationSettings = AppleSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 100,
-        );
-      } else {
-        locationSettings = LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 100,
-        );
-      }
-
-      return await Geolocator.getCurrentPosition(
-        locationSettings: locationSettings,
+    if (Platform.isAndroid) {
+      locationSettings = AndroidSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
       );
-    } catch (e) {
-      throw Exception('failed to get current location');
+    } else if (Platform.isIOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
+    } else {
+      locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
     }
+
+    return await Geolocator.getCurrentPosition(
+      locationSettings: locationSettings,
+    );
   }
 }
