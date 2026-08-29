@@ -12,9 +12,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: TracelogTheme.lightTheme,
-      home: HomeScreen()
-    );
+    return MaterialApp(theme: TracelogTheme.lightTheme, home: HomeScreen());
   }
 }

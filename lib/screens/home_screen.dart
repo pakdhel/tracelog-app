@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tracelog_app/providers/geolocator_provider.dart';
+import 'package:tracelog_app/providers/list_location_provider.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
-import 'package:tracelog_app/screens/widgets/listtile_location_widget.dart';
+import 'package:tracelog_app/screens/widgets/listview_listtile.dart';
 import 'package:tracelog_app/screens/widgets/search_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -12,11 +12,16 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
-    final locationAsync = ref.watch(geolocatorProvider);
+    final listLocationAsync = ref.watch(listLocationProvider);
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 36),
+        padding: const EdgeInsets.only(
+          right: 20.0,
+          left: 20,
+          top: 48,
+          // bottom: 24,
+        ),
         child: Column(
           children: [
             Row(
@@ -79,14 +84,19 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
 
-            SizedBox(height: 8),
+            SizedBox(height: 12),
 
-            ListtileLocationWidget(),
-
-            locationAsync.when(
-              error: (err, stack) => Text('error $err'),
-              loading: () => CircularProgressIndicator(),
-              data: (data) => Text('$data'),
+            Expanded(
+              child: listLocationAsync.when(
+                skipLoadingOnReload: true,
+                error: (err, stack) => listLocationAsync.value != null
+                    ? ListviewListtile(locations: listLocationAsync.value!)
+                    : Text('Error $err'),
+                loading: () => listLocationAsync.value != null
+                    ? ListviewListtile(locations: listLocationAsync.value!)
+                    : Center(child: CircularProgressIndicator()),
+                data: (locations) => ListviewListtile(locations: locations),
+              ),
             ),
 
             // Text('data'),
@@ -96,7 +106,7 @@ class HomeScreen extends ConsumerWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
-            ref.read(geolocatorProvider.notifier).addLocationManually(),
+            ref.read(listLocationProvider.notifier).addListLocation(),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(100),
         ),
