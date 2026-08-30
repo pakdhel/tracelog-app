@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tracelog_app/providers/list_location_provider.dart';
+import 'package:tracelog_app/providers/theme_provider.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
 import 'package:tracelog_app/screens/widgets/listview_listtile.dart';
 import 'package:tracelog_app/screens/widgets/search_widget.dart';
@@ -58,21 +59,24 @@ class HomeScreen extends ConsumerWidget {
                     Text(
                       'Location History',
                       style: textTheme.headlineMedium?.copyWith(
-                        color: colorScheme.primary,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
                 ),
 
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainer,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: colorScheme.outline),
+                GestureDetector(
+                  onTap: () => ref.read(themeProvider.notifier).toggleTheme(),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainer,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: colorScheme.outline),
+                    ),
+                    child: Icon(Icons.dark_mode_outlined),
                   ),
-                  child: Icon(Icons.dark_mode_outlined),
                 ),
               ],
             ),
