@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:tracelog_app/static/location_permission_state.dart';
+import 'package:tracelog_app/static/location_exception.dart';
 
 class GeolocatorService {
   Future<void> checkLocationAcess() async {

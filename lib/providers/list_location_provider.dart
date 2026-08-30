@@ -39,7 +39,7 @@ class ListLocationNotifier extends AsyncNotifier<List<LocationEntry>> {
         dateTime: recordedAt,
       );
 
-      return [...currentList, newEntry];
+      return [newEntry, ...currentList];
     });
   }
 }
