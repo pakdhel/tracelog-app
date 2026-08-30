@@ -15,6 +15,9 @@ class HomeScreen extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final listLocationAsync = ref.watch(listLocationProvider);
+    final theme = ref.watch(themeProvider);
+    final brightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
     ref.listen(listLocationProvider, (previous, next) {
       if (next.hasError) {
@@ -75,7 +78,14 @@ class HomeScreen extends ConsumerWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: colorScheme.outline),
                     ),
-                    child: Icon(Icons.dark_mode_outlined),
+                    child: switch (theme.value) {
+                      ThemeMode.light => Icon(Icons.dark_mode_outlined),
+                      ThemeMode.dark => Icon(Icons.light_mode_outlined),
+                      _ =>
+                        (brightness == Brightness.light
+                            ? Icon(Icons.dark_mode_outlined)
+                            : Icon(Icons.light_mode_outlined)),
+                    },
                   ),
                 ),
               ],
