@@ -39,7 +39,7 @@ class _CheckboxTrackingWidgetState extends State<CheckboxTrackingWidget> {
               Text(
                 'Background Auto-Tracking',
                 style: textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.primary,
+                  color: colorScheme.onSurface,
                 ),
               ),
 

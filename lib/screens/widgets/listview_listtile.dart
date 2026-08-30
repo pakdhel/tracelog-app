@@ -37,7 +37,12 @@ class ListviewListtile extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(date.formatDate(), style: textTheme.titleMedium),
+                  Text(
+                    date.formatDate(),
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
                   const Spacer(),
                   Text(
                     '$stops stops',

@@ -22,7 +22,7 @@ class ListtileLocationWidget extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         border: Border.all(color: colorScheme.outline),
         borderRadius: BorderRadius.circular(18),
       ),
@@ -69,7 +69,7 @@ class ListtileLocationWidget extends StatelessWidget {
                 Text(
                   '${location.placemark?.street}',
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.primary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
 
@@ -78,7 +78,7 @@ class ListtileLocationWidget extends StatelessWidget {
                 Text(
                   formattedCoordinate,
                   style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.primary,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
