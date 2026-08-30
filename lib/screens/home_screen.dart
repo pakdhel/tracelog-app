@@ -4,6 +4,7 @@ import 'package:tracelog_app/providers/list_location_provider.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
 import 'package:tracelog_app/screens/widgets/listview_listtile.dart';
 import 'package:tracelog_app/screens/widgets/search_widget.dart';
+import 'package:tracelog_app/static/location_permission_state.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -13,6 +14,21 @@ class HomeScreen extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final listLocationAsync = ref.watch(listLocationProvider);
+
+    ref.listen(listLocationProvider, (previous, next) {
+      if (next.hasError) {
+        final error = next.error;
+        if (error is LocationException) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text(error.message),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        }
+      }
+    });
 
     return Scaffold(
       body: Padding(
@@ -98,15 +114,19 @@ class HomeScreen extends ConsumerWidget {
                 data: (locations) => ListviewListtile(locations: locations),
               ),
             ),
-
-            // Text('data'),
           ],
         ),
       ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            ref.read(listLocationProvider.notifier).addListLocation(),
+        backgroundColor: listLocationAsync.isLoading
+            ? colorScheme.primary.withAlpha(200)
+            : colorScheme.primary,
+        elevation: 1,
+        onPressed: listLocationAsync.isLoading
+            ? null
+            : () => ref.read(listLocationProvider.notifier).addListLocation(),
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(100),
         ),
