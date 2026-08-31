@@ -9,10 +9,10 @@ enum TracelogDarkColors {
   outline("border", Color(0xFF272E40)),
   background("background", Color(0xFF020617)),
 
-  autoTrackedText("auto tracked text", Color(0xFFC0F3D0)),
-  autoTrackedContainer("auto tracked container", Color(0xFF095C34)),
-  manualText("manual text", Color(0xFFFDE4BB)),
-  manualContainer("manual container", Color(0xFF7D460B));
+  onSecondaryContainer("auto tracked text", Color(0xFFC0F3D0)),
+  onTertiaryContainer("manual text", Color(0xFFFDE4BB)),
+  secondaryContainer("auto tracked container", Color(0xFF095C34)),
+  tertiaryContainer("manual container", Color(0xFF7D460B));
 
   const TracelogDarkColors(this.name, this.color);
   final String name;

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tracelog_app/style/colors/tracelog_colors.dart';
-import 'package:tracelog_app/style/colors/tracelog_dark_colors.dart';
 
 class LabelWidget extends StatelessWidget {
   final bool isAutoTracked;
@@ -9,23 +7,14 @@ class LabelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textColor = isAutoTracked
+        ? colorScheme.onSecondaryContainer
+        : colorScheme.onTertiaryContainer;
 
-    final textColor = isDark
-        ? (isAutoTracked
-              ? TracelogDarkColors.autoTrackedText.color
-              : TracelogDarkColors.manualText.color)
-        : (isAutoTracked
-              ? TracelogColors.autoTrackedText.color
-              : TracelogColors.manualText.color);
-
-    final backgroundColor = isDark
-        ? (isAutoTracked
-              ? TracelogDarkColors.autoTrackedContainer.color
-              : TracelogDarkColors.manualContainer.color)
-        : (isAutoTracked
-              ? TracelogColors.autoTrackedContainer.color
-              : TracelogColors.manualContainer.color);
+    final backgroundColor = isAutoTracked
+        ? colorScheme.secondaryContainer
+        : colorScheme.tertiaryContainer;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
