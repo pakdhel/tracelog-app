@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tracelog_app/models/location_entry.dart';
+import 'package:tracelog_app/screens/widgets/label_widget.dart';
 import 'package:tracelog_app/utils/coordinates_convertion.dart';
 
 class ListtileLocationWidget extends StatelessWidget {
@@ -47,20 +48,7 @@ class ListtileLocationWidget extends StatelessWidget {
                   children: [
                     Text(formattedDate, style: textTheme.bodyMedium),
                     SizedBox(width: 4),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withAlpha(50),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        'Auto-tracked',
-                        style: textTheme.labelSmall?.copyWith(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    LabelWidget(isAutoTracked: location.isAutoTracked),
                   ],
                 ),
 
