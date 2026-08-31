@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tracelog_app/providers/auto_track_provider.dart';
 
-class CheckboxTrackingWidget extends StatefulWidget {
+class CheckboxTrackingWidget extends ConsumerWidget {
   const CheckboxTrackingWidget({super.key});
 
   @override
-  State<CheckboxTrackingWidget> createState() => _CheckboxTrackingWidgetState();
-}
-
-class _CheckboxTrackingWidgetState extends State<CheckboxTrackingWidget> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final autoTrack = ref.watch(autoTrackProvider);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -54,7 +52,15 @@ class _CheckboxTrackingWidgetState extends State<CheckboxTrackingWidget> {
 
           const Spacer(),
 
-          Switch(value: true, onChanged: (value) {}),
+          Switch(
+            value: switch (autoTrack.value) {
+              true => true,
+              false => false,
+              _ => false 
+            },
+            onChanged: (value) =>
+                ref.read(autoTrackProvider.notifier).toggleAutoTracking(value),
+          ),
         ],
       ),
     );

@@ -16,6 +16,21 @@ class SharedPreferencesService {
 
   Future<void> setTheme(ThemeMode theme) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_themeKey, theme.name); // return 'dark', 'light', 'system'
+    await prefs.setString(
+      _themeKey,
+      theme.name,
+    ); // return 'dark', 'light', 'system'
+  }
+
+  static const String _autoTrackKey = "AUTO_TRACK";
+
+  Future<bool> getAutoTrack() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_autoTrackKey) ?? false;
+  }
+
+  Future<void> setAutoTrack(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_autoTrackKey, isEnabled);
   }
 }
