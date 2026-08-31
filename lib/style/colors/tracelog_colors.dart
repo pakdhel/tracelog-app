@@ -7,7 +7,12 @@ enum TracelogColors {
   surfaceContainer("surface container", Color(0xFFF1F5F9)),
   onSurfaceVariant("on surface variant", Color(0xFF62748E)),
   outline("border", Color(0xFFE2E8F0)),
-  background("background", Color(0xFFFFFFFF));
+  background("background", Color(0xFFFFFFFF)),
+
+  autoTrackedText("auto tracked text", Color(0xFF095C34)),
+  autoTrackedContainer("auto tracked container", Color(0xFFC0F3D0)),
+  manualText("manual text", Color(0xFF7D460B)),
+  manualContainer("manual container", Color(0xFFFDE4BB));
 
   const TracelogColors(this.name, this.color);
   final String name;
