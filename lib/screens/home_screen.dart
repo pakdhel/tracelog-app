@@ -104,7 +104,7 @@ class HomeScreen extends ConsumerWidget {
             Expanded(
               child: listLocationAsync.when(
                 skipLoadingOnReload: true,
-                error: (err, stack) => listLocationAsync.value != null
+                error: (err, stack) => listLocationAsync.value != null  
                     ? ListviewListtile(locations: listLocationAsync.value!)
                     : Text('Error $err'),
                 loading: () => listLocationAsync.value != null
@@ -124,7 +124,7 @@ class HomeScreen extends ConsumerWidget {
         elevation: 1,
         onPressed: listLocationAsync.isLoading
             ? null
-            : () => ref.read(listLocationProvider.notifier).addListLocation(),
+            : () => ref.read(listLocationProvider.notifier).addListLocation(false),
 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(100),
