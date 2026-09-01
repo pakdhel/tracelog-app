@@ -29,32 +29,16 @@ class AutoTrackNotifier extends AsyncNotifier<bool> {
   }
 
   void toggleAutoTracking(bool value) async {
-    final isAutoTrack = state.value;
     final sharedPrefs = ref.read(sharePreferencesServiceProvider);
+    final geolocator = ref.read(geolocatorServiceProvider);
 
-    if (isAutoTrack != null && isAutoTrack != value) {
+    state = const AsyncLoading<bool>().copyWithPrevious(state);
+
+    state = await AsyncValue.guard(() async {
+      await geolocator.checkLocationAcess();
       await sharedPrefs.setAutoTrack(value);
-      state = AsyncValue.data(value);
-    }
-
-    if (value) {
-      final initialDelay = _calculateInitialDelay(5, 0);
-      try {
-        await Workmanager().registerPeriodicTask(
-          '1',
-          'autoTrackingTask',
-          initialDelay: initialDelay,
-          frequency: const Duration(minutes: 20),
-          existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
-        );
-
-        print('task berhasil didaftarkan');
-      } catch (e) {
-        print('task gagal didaftarkan');
-      }
-    } else {
-      Workmanager().cancelByUniqueName('1');
-    }
+      return value;
+    });
   }
 }
 
