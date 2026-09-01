@@ -11,13 +11,16 @@ class AutoTrackNotifier extends AsyncNotifier<bool> {
   }
 
   void toggleAutoTracking(bool value) async {
-    final isAutoTrack = state.value;
     final sharedPrefs = ref.read(sharePreferencesServiceProvider);
+    final geolocator = ref.read(geolocatorServiceProvider);
 
-    if (isAutoTrack != null && isAutoTrack != value) {
+    state = const AsyncLoading<bool>().copyWithPrevious(state);
+
+    state = await AsyncValue.guard(() async {
+      await geolocator.checkLocationAcess();
       await sharedPrefs.setAutoTrack(value);
-      state = AsyncValue.data(value);
-    }
+      return value;
+    });
   }
 }
 

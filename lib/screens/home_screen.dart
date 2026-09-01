@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tracelog_app/providers/auto_track_provider.dart';
 import 'package:tracelog_app/providers/list_location_provider.dart';
 import 'package:tracelog_app/providers/theme_provider.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
@@ -10,6 +11,21 @@ import 'package:tracelog_app/static/location_exception.dart';
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
+  void _showLocationErrorSnackbar(BuildContext context, AsyncValue next) {
+    if (next.hasError) {
+      final error = next.error;
+      if (error is LocationException) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text(error.message),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
@@ -19,20 +35,15 @@ class HomeScreen extends ConsumerWidget {
     final brightness =
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
-    ref.listen(listLocationProvider, (previous, next) {
-      if (next.hasError) {
-        final error = next.error;
-        if (error is LocationException) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              duration: Duration(seconds: 2),
-              content: Text(error.message),
-              backgroundColor: Colors.redAccent,
-            ),
-          );
-        }
-      }
-    });
+    ref.listen(
+      listLocationProvider,
+      (previous, next) => _showLocationErrorSnackbar(context, next),
+    );
+
+    ref.listen(
+      autoTrackProvider,
+      (previous, next) => _showLocationErrorSnackbar(context, next),
+    );
 
     return Scaffold(
       body: Padding(
@@ -104,7 +115,7 @@ class HomeScreen extends ConsumerWidget {
             Expanded(
               child: listLocationAsync.when(
                 skipLoadingOnReload: true,
-                error: (err, stack) => listLocationAsync.value != null  
+                error: (err, stack) => listLocationAsync.value != null
                     ? ListviewListtile(locations: listLocationAsync.value!)
                     : Text('Error $err'),
                 loading: () => listLocationAsync.value != null
@@ -124,7 +135,9 @@ class HomeScreen extends ConsumerWidget {
         elevation: 1,
         onPressed: listLocationAsync.isLoading
             ? null
-            : () => ref.read(listLocationProvider.notifier).addListLocation(false),
+            : () => ref
+                  .read(listLocationProvider.notifier)
+                  .addListLocation(false),
 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(100),

@@ -53,11 +53,7 @@ class CheckboxTrackingWidget extends ConsumerWidget {
           const Spacer(),
 
           Switch(
-            value: switch (autoTrack.value) {
-              true => true,
-              false => false,
-              _ => false 
-            },
+            value: autoTrack.value ?? false,
             onChanged: (value) =>
                 ref.read(autoTrackProvider.notifier).toggleAutoTracking(value),
           ),
