@@ -8,9 +8,14 @@ import 'package:tracelog_app/screens/widgets/listview_listtile.dart';
 import 'package:tracelog_app/screens/widgets/search_widget.dart';
 import 'package:tracelog_app/static/location_exception.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _showLocationErrorSnackbar(BuildContext context, AsyncValue next) {
     if (next.hasError) {
       final error = next.error;
@@ -26,8 +31,27 @@ class HomeScreen extends ConsumerWidget {
     }
   }
 
+  late final AppLifecycleListener _listener;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    _listener = AppLifecycleListener(
+      onResume: () {
+        ref.invalidate(listLocationProvider);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _listener.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final listLocationAsync = ref.watch(listLocationProvider);

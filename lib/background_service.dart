@@ -1,4 +1,6 @@
+import 'dart:ui';
 
+import 'package:flutter/widgets.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:tracelog_app/api/database_service.dart';
 import 'package:tracelog_app/api/geocoding_service.dart';
@@ -9,9 +11,8 @@ import 'package:workmanager/workmanager.dart';
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    // if (kDebugMode) {
-    //   print("Native called background task: $task");
-    // }
+    WidgetsFlutterBinding.ensureInitialized();
+    DartPluginRegistrant.ensureInitialized();
 
     print('====================================');
     print('🚀 WORKMANAGER START');
@@ -28,22 +29,26 @@ void callbackDispatcher() {
       print('Mengambil lokasi...');
 
       final position = await geolocatorService
-          .getCurrentLocationByCoordinates();
+          .getCurrentLocationByCoordinates(isBackground: true);
 
       print('📍Location: ${position.latitude}, ${position.longitude}');
 
       Placemark? placemark;
 
-      print('Melakukan reverse geocoding...');
+      try {
+        print('Melakukan reverse geocoding...');
 
-      final placemarks = await geocodingService.placemarks(
-        position.latitude,
-        position.longitude,
-      );
+        final placemarks = await geocodingService.placemarks(
+          position.latitude,
+          position.longitude,
+        );
 
-      placemark = placemarks.isNotEmpty ? placemarks.first : null;
+        placemark = placemarks.isNotEmpty ? placemarks.first : null;
 
-      print('🏠 Placemark: $placemark');
+        print('🏠 Placemark: $placemark');
+      } catch (e) {
+        placemark = null;
+      }
 
       print('Membuat LocationEntry...');
 

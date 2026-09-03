@@ -6,9 +6,9 @@ import 'package:tracelog_app/style/theme/tracelog_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workmanager/workmanager.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Workmanager().initialize(callbackDispatcher);
+  await Workmanager().initialize(callbackDispatcher);
 
   runApp(ProviderScope(child: const MainApp()));
 }
