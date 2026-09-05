@@ -9,11 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_map: ^8.3.2
   flutter_riverpod: ^2.6.1
   geocoding: ^5.0.0
   geolocator: ^14.0.3
   google_fonts: ^8.2.1
   intl: ^0.20.3
+  latlong2: ^0.10.1
   shared_preferences: ^2.5.5
   sqflite: ^2.4.2+1
   workmanager:
