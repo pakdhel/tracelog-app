@@ -47,7 +47,7 @@ lib/style/
 
 | Home (Light) | Home (Dark) | Location Detail (Light) | Location Detail (Dark) |
 |---|---|---|---|
-| ![Home Light](docs/screenshots/home_light.jpeg) | ![Home Dark](docs/screenshots/home_dark.jpeg) | ![Detail Light](docs/screenshots/location_detail_light.jpeg) | ![Detail Light](docs/screenshots/location_detail_dark.jpeg) |
+| ![Home Light](docs/screenshots/home_light.jpeg) | ![Home Dark](docs/screenshots/home_dark.jpeg) | ![Detail Light](docs/screenshots/location_detail_light.jpeg) | ![Detail Dark](docs/screenshots/location_detail_dark.jpeg) |
 
 ## 📂 Struktur Project
 
