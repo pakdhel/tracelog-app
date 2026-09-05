@@ -13,6 +13,10 @@ class GeolocatorService {
     }
   }
 
+  Future<void> openAppSettings() async {
+    await Geolocator.openAppSettings();
+  }
+
   Future<void> checkLocationAccess({bool isBackgroundRequired = false}) async {
     await _checkLocationServiced();
 
@@ -28,8 +32,7 @@ class GeolocatorService {
 
     if (isBackgroundRequired && permission == LocationPermission.whileInUse) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.always) {        
-        await Geolocator.openAppSettings();
+      if (permission != LocationPermission.always) {
         throw LocationPermissionDeniedException(
           'Background location permission ("Allow all the time") is required for auto tracking. Please enable it in Settings.',
         );
@@ -37,7 +40,6 @@ class GeolocatorService {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      await Geolocator.openAppSettings();
       throw LocationPermissionDeniedForeverException(
         'Location access is blocked. Please enable it from your device settings.',
       );
@@ -67,13 +69,10 @@ class GeolocatorService {
     late LocationSettings locationSettings;
 
     if (Platform.isAndroid) {
-      locationSettings = AndroidSettings(accuracy: LocationAccuracy.high);
-    } else if (Platform.isIOS) {
-      locationSettings = AppleSettings(
+      locationSettings = AndroidSettings(
         accuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 15),
       );
-    } else {
-      locationSettings = LocationSettings(accuracy: LocationAccuracy.high);
     }
 
     return await Geolocator.getCurrentPosition(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tracelog_app/api/geolocator_service.dart';
 import 'package:tracelog_app/providers/auto_track_provider.dart';
 import 'package:tracelog_app/providers/list_location_provider.dart';
 import 'package:tracelog_app/providers/theme_provider.dart';
@@ -16,15 +17,54 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final geolocatorService = GeolocatorService();
   void _showLocationErrorSnackbar(BuildContext context, AsyncValue next) {
-    if (next.hasError) {
+    if (next.hasError && !next.isLoading) {
       final error = next.error;
       if (error is LocationException) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        final messenger = ScaffoldMessenger.of(context);
+        messenger.hideCurrentSnackBar();
+        messenger.showSnackBar(
           SnackBar(
-            duration: Duration(seconds: 2),
-            content: Text(error.message),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            duration: const Duration(seconds: 4),
             backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+            content: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    error.message,
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 2,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.redAccent,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    minimumSize: Size.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                  onPressed: () async {
+                    await geolocatorService.openAppSettings();
+                  },
+                  child: const Text(
+                    'Settings',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }
