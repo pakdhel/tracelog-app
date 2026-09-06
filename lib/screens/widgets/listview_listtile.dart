@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tracelog_app/models/location_entry.dart';
 import 'package:tracelog_app/screens/widgets/listtile_location_widget.dart';
+import 'package:tracelog_app/utils/date_helper.dart';
 
 class ListviewListtile extends StatelessWidget {
   final List<LocationEntry> locations;
@@ -63,20 +63,5 @@ class ListviewListtile extends StatelessWidget {
         }
       },
     );
-  }
-}
-
-const String dateFormatter = 'EEEE, dd MMM yyyy';
-
-extension DateHelper on DateTime {
-  String formatDate() {
-    final formatter = DateFormat(dateFormatter);
-    return formatter.format(this);
-  }
-
-  bool isSameDate(DateTime other) {
-    return this.year == other.year &&
-        this.month == other.month &&
-        this.day == other.day;
   }
 }

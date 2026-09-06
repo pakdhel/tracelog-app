@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tracelog_app/api/geolocator_service.dart';
 import 'package:tracelog_app/providers/auto_track_provider.dart';
+import 'package:tracelog_app/providers/date_filter_provider.dart';
 import 'package:tracelog_app/providers/list_location_provider.dart';
 import 'package:tracelog_app/providers/theme_provider.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
+import 'package:tracelog_app/screens/widgets/filter_chip_widget.dart';
 import 'package:tracelog_app/screens/widgets/listview_listtile.dart';
 import 'package:tracelog_app/screens/widgets/search_widget.dart';
 import 'package:tracelog_app/static/location_exception.dart';
+import 'package:tracelog_app/utils/date_helper.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -99,6 +102,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final brightness =
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
+    final filteredDate = ref.watch(dateFilterProvider);
+
     ref.listen(
       listLocationProvider,
       (previous, next) => _showLocationErrorSnackbar(context, next),
@@ -176,6 +181,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
             SizedBox(height: 12),
 
+            FilterChipWidget(),
+
+            SizedBox(height: 12),
+
             Expanded(
               child: listLocationAsync.when(
                 skipLoadingOnReload: true,
@@ -185,7 +194,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 loading: () => listLocationAsync.value != null
                     ? ListviewListtile(locations: listLocationAsync.value!)
                     : Center(child: CircularProgressIndicator()),
-                data: (locations) => ListviewListtile(locations: locations),
+                data: (locations) {
+                  final filteredLocation = filteredDate == null
+                      ? locations
+                      : locations
+                            .where(
+                              (location) =>
+                                  location.dateTime.isSameDate(filteredDate),
+                            )
+                            .toList();
+                  return ListviewListtile(locations: filteredLocation);
+                },
               ),
             ),
           ],
