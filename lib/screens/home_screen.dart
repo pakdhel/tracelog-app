@@ -115,77 +115,88 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(
-          right: 20.0,
-          left: 20,
-          top: 48,
-          // bottom: 24,
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 20.0,
+              left: 20,
+              top: 48,
+              // bottom: 24,
+            ),
+            child: Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'TRACELOG',
-                      style: textTheme.labelMedium?.copyWith(
-                        letterSpacing: 1.1,
-                        color: colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'TRACELOG',
+                          style: textTheme.labelMedium?.copyWith(
+                            letterSpacing: 1.1,
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        Text(
+                          'Location History',
+                          style: textTheme.headlineMedium?.copyWith(
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      ],
                     ),
 
-                    Text(
-                      'Location History',
-                      style: textTheme.headlineMedium?.copyWith(
-                        color: colorScheme.onSurface,
+                    GestureDetector(
+                      onTap: () =>
+                          ref.read(themeProvider.notifier).toggleTheme(),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainer,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: colorScheme.outline),
+                        ),
+                        child: switch (theme.value) {
+                          ThemeMode.light => Icon(Icons.dark_mode_outlined),
+                          ThemeMode.dark => Icon(Icons.light_mode_outlined),
+                          _ =>
+                            (brightness == Brightness.light
+                                ? Icon(Icons.dark_mode_outlined)
+                                : Icon(Icons.light_mode_outlined)),
+                        },
                       ),
                     ),
                   ],
                 ),
 
-                GestureDetector(
-                  onTap: () => ref.read(themeProvider.notifier).toggleTheme(),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainer,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: colorScheme.outline),
-                    ),
-                    child: switch (theme.value) {
-                      ThemeMode.light => Icon(Icons.dark_mode_outlined),
-                      ThemeMode.dark => Icon(Icons.light_mode_outlined),
-                      _ =>
-                        (brightness == Brightness.light
-                            ? Icon(Icons.dark_mode_outlined)
-                            : Icon(Icons.light_mode_outlined)),
-                    },
-                  ),
-                ),
+                SizedBox(height: 12),
+
+                CheckboxTrackingWidget(),
+
+                SizedBox(height: 12),
+
+                SearchWidget(),
+
+                SizedBox(height: 12),
               ],
             ),
+          ),
 
-            SizedBox(height: 12),
+          FilterChipWidget(),
 
-            CheckboxTrackingWidget(),
+          SizedBox(height: 8),
 
-            SizedBox(height: 12),
+          Divider(color: colorScheme.outline),
 
-            SearchWidget(),
-
-            SizedBox(height: 12),
-
-            FilterChipWidget(),
-
-            SizedBox(height: 12),
-
-            Expanded(
+          SizedBox(height: 8),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: listLocationAsync.when(
                 skipLoadingOnReload: true,
                 error: (err, stack) => listLocationAsync.value != null
@@ -207,8 +218,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
