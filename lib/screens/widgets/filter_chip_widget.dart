@@ -10,7 +10,7 @@ class FilterChipWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<DateTime> listDate = List.generate(7, (index) {
-      return DateTime.now().add(Duration(days: index));
+      return DateTime.now().subtract(Duration(days: index));
     });
 
     final textTheme = Theme.of(context).textTheme;
@@ -22,6 +22,7 @@ class FilterChipWidget extends ConsumerWidget {
       child: Row(
         spacing: 8,
         children: [
+          SizedBox(width: 12),
           FilterChip(
             backgroundColor: colorScheme.surfaceContainer,
             selectedColor: colorScheme.primary,
@@ -101,6 +102,8 @@ class FilterChipWidget extends ConsumerWidget {
               },
             );
           }),
+
+          SizedBox(width: 12),
         ],
       ),
     );
