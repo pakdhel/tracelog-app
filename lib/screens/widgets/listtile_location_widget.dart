@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:tracelog_app/models/location_entry.dart';
+import 'package:tracelog_app/providers/active_delete_item_provider.dart';
 import 'package:tracelog_app/screens/widgets/label_widget.dart';
 import 'package:tracelog_app/screens/widgets/location_detail_sheet.dart';
 import 'package:tracelog_app/utils/coordinates_convertion.dart';
 
-class ListtileLocationWidget extends StatelessWidget {
+class ListtileLocationWidget extends ConsumerWidget {
+  final ValueChanged<int?> valueChanged;
   final LocationEntry location;
-  const ListtileLocationWidget({super.key, required this.location});
+  const ListtileLocationWidget({
+    super.key,
+    required this.location,
+    required this.valueChanged,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -23,16 +30,21 @@ class ListtileLocationWidget extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () {
-        showModalBottomSheet(
-          context: context,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          builder: (BuildContext context) {
-            return LocationDetailSheet(location: location);
-          },
-        );
+        final activeDelete = ref.read(activeDeleteItemProvider);
+        activeDelete == location.id
+            ? valueChanged(null)
+            : showModalBottomSheet(
+                context: context,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                builder: (BuildContext context) {
+                  return LocationDetailSheet(location: location);
+                },
+              );
+      },
+      onLongPress: () {
+        valueChanged(location.id);
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: 10),
         padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
