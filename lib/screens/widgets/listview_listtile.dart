@@ -14,8 +14,6 @@ class ListviewListtile extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
-    // final locationId = ref.watch(activeDeleteItemProvider);
-
     if (locations.isEmpty) {
       return const Center(child: Text('Belum ada lokasi tercatat.'));
     }
