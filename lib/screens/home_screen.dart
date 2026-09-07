@@ -4,6 +4,7 @@ import 'package:tracelog_app/api/geolocator_service.dart';
 import 'package:tracelog_app/providers/auto_track_provider.dart';
 import 'package:tracelog_app/providers/date_filter_provider.dart';
 import 'package:tracelog_app/providers/list_location_provider.dart';
+import 'package:tracelog_app/providers/search_provider.dart';
 import 'package:tracelog_app/providers/theme_provider.dart';
 import 'package:tracelog_app/screens/widgets/checkbox_tracking_widget.dart';
 import 'package:tracelog_app/screens/widgets/filter_chip_widget.dart';
@@ -103,6 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
     final filteredDate = ref.watch(dateFilterProvider);
+    final searchQuery = ref.watch(searchProvider);
 
     ref.listen(
       listLocationProvider,
@@ -180,7 +182,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 SizedBox(height: 12),
 
-                SearchWidget(),
+                SearchWidget(
+                  onValueChanged: (value) {
+                    ref.read(searchProvider.notifier).updateQuery(value);
+                  },
+                ),
 
                 SizedBox(height: 12),
               ],
@@ -206,7 +212,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ? ListviewListtile(locations: listLocationAsync.value!)
                     : Center(child: CircularProgressIndicator()),
                 data: (locations) {
-                  final filteredLocation = filteredDate == null
+                  final filteredLocationByDate = filteredDate == null
                       ? locations
                       : locations
                             .where(
@@ -214,6 +220,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   location.dateTime.isSameDate(filteredDate),
                             )
                             .toList();
+
+                  final filteredLocation = filteredLocationByDate
+                      .where(
+                        (locationsByDate) =>
+                            (locationsByDate.placemark?.street ?? "")
+                                .toLowerCase()
+                                .contains(searchQuery),
+                      )
+                      .toList();
                   return ListviewListtile(locations: filteredLocation);
                 },
               ),
