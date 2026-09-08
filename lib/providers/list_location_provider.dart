@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:tracelog_app/models/location_entry.dart';
+import 'package:tracelog_app/providers/active_delete_item_provider.dart';
 import 'package:tracelog_app/providers/providers.dart';
 
 class ListLocationNotifier extends AsyncNotifier<List<LocationEntry>> {
@@ -49,6 +50,18 @@ class ListLocationNotifier extends AsyncNotifier<List<LocationEntry>> {
 
       return [newEntry, ...currentList];
     });
+  }
+
+  Future<void> removeLocationById(int id) async {
+    final database = ref.read(databaseServiceProvider);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await database.removeItem(id);
+      return await database.getAllItems();
+    });
+
+    ref.read(activeDeleteItemProvider.notifier).setActiveItem(null);
   }
 }
 

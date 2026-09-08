@@ -47,4 +47,14 @@ class DatabaseService {
     final results = await db.query(_tableName, orderBy: 'id DESC');
     return results.map((result) => LocationEntry.fromJson(result)).toList();
   }
+
+  Future<int> removeItem(int id) async {
+    final db = await _initializedDb();
+    final result = await db.delete(
+      _tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result;
+  }
 }
