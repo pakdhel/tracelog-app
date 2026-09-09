@@ -2,7 +2,7 @@
 
 TraceLog adalah aplikasi mobile location history & auto-tracker yang dibangun menggunakan Flutter. Project ini dibuat sebagai media belajar sekaligus portofolio, dengan fokus pada penerapan praktik pengembangan Flutter modern — mulai dari state management, local persistence, background execution di Android, hingga desain sistem tema terpusat.
 
-> ✅ **Status:** Pencatatan lokasi manual & otomatis (background service), local storage (sqflite), auto-tracking toggle, preview peta, dark/light theme, serta search & filter lokasi sudah berfungsi penuh. Selanjutnya: hapus/edit entry, unit test, dan CI/CD.
+> ✅ **Status:** Pencatatan lokasi manual & otomatis (background service), local storage (sqflite), auto-tracking toggle, preview peta, dark/light theme, search & filter lokasi, serta hapus entry sudah berfungsi penuh. Selanjutnya: unit test dan CI/CD.
 
 ## ✨ Tentang Project
 
@@ -85,7 +85,7 @@ lib/
 - [x] Auto-refresh UI saat aplikasi kembali ke foreground (`AppLifecycleListener`)
 - [x] Dark/light/system theme, tersimpan otomatis
 - [x] Search lokasi berdasarkan alamat (real-time, case-insensitive) dan filter chip 7 hari terakhir, keduanya bisa dikombinasikan
-- [ ] Hapus & edit entry lokasi
+- [x] Hapus entry lokasi
 - [ ] Unit test & widget test
 - [ ] Setup CI dengan GitHub Actions
 - [ ] Dukungan iOS untuk background execution
@@ -94,7 +94,6 @@ lib/
 
 Project ini masih tahap belajar, bukan rilis produksi yang siap dipublikasikan. Beberapa keterbatasan yang sudah teridentifikasi:
 
-- **Belum ada fitur hapus/edit entry** — sekali tercatat, entry lokasi tidak bisa dihapus atau diedit dari UI.
 - **Frequency background task masih nilai testing** — perlu diubah ke interval 24 jam sebelum dipakai di kondisi nyata, saat ini masih diset pendek untuk mempercepat pengujian.
 - **Dependency `workmanager` dari branch `main` git**, bukan rilis stabil di pub.dev — perlu dipantau untuk breaking change, karena belum ada rilis resmi yang mencakup fix yang dibutuhkan saat project ini dibuat.
 - **Android only** — setup background execution untuk iOS belum dikonfigurasi maupun diuji.
