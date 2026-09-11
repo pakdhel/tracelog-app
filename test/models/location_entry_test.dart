@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:tracelog_app/models/location_entry.dart';
 
 void main() {
-  test('LocationEntry.fromMap harus parse data dengan benar', () {
+  test('LocationEntry.fromJson harus parse data dengan benar', () {
     final json = {
       'id': 1,
       'street': 'Jalan Adi sucipto',
@@ -27,7 +27,7 @@ void main() {
   });
 
   test(
-    'LocationEntry.fromMap harus menghasilkan placemark null jika street null',
+    'LocationEntry.fromJson harus menghasilkan placemark null jika street null',
     () {
       final json = {
         'id': 2,
