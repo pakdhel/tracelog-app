@@ -20,7 +20,6 @@ class LocationDetailSheet extends StatelessWidget {
       location.position.longitude,
     );
     return Container(
-      height: 400,
       padding: EdgeInsets.only(right: 20, left: 20, top: 16),
       child: Column(
         children: [
