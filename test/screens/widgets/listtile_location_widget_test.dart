@@ -19,6 +19,7 @@ void main() {
         ''',
     (tester) async {
       final location = LocationEntry(
+        id: 1,
         placemark: Placemark(street: 'Jalan Urip Sumoharjo'),
         position: Position(
           longitude: 0.0,
