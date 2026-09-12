@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TracelogTextstyles {
-  static TextStyle primaryFonts = GoogleFonts.arimo();
-  static TextStyle secondaryFonts = GoogleFonts.inconsolata();
+  static TextStyle primaryFonts = TextStyle(fontFamily: 'Arimo');
+  static TextStyle secondaryFonts = TextStyle(fontFamily: 'Inconsolata');
 
   static TextStyle headlineMedium = primaryFonts.copyWith(
     fontSize: 20,

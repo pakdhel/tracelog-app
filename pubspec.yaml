@@ -32,3 +32,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: Arimo
+      fonts:
+      - asset: assets/fonts/Arimo-Regular.ttf
+
+    - family: Inconsolata
+      fonts:
+      - asset: assets/fonts/Inconsolata-Regular.ttf
