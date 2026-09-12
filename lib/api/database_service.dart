@@ -2,7 +2,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:tracelog_app/models/location_entry.dart';
 
 class DatabaseService {
-  static const String _databaseName = 'locationHistoryList.db';
+  final String _databaseName;
+
+  DatabaseService({String? databaseName})
+    : _databaseName = databaseName ?? 'locationHistoryList.db';
+    
   static const String _tableName = 'location_history';
   static const int _version = 1;
 
