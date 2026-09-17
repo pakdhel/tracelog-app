@@ -4,13 +4,20 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:tracelog_app/api/database_service.dart';
+import 'package:tracelog_app/api/geocoding_service.dart';
+import 'package:tracelog_app/api/geolocator_service.dart';
 import 'package:tracelog_app/models/location_entry.dart';
 import 'package:tracelog_app/providers/list_location_provider.dart';
 import 'package:tracelog_app/providers/providers.dart';
 
+import 'fake_geocoding_service.dart';
+import 'fake_geolocator_service.dart';
+
 void main() {
   late DatabaseService databaseService;
   late ProviderContainer container;
+  late GeolocatorService geolocatorService;
+  late GeocodingService geocodingService;
   setUpAll(() {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
@@ -18,8 +25,14 @@ void main() {
 
   setUp(() {
     databaseService = DatabaseService(databaseName: inMemoryDatabasePath);
+    geolocatorService = FakeGeolocatorService();
+    geocodingService = FakeGeocodingService();
     container = ProviderContainer(
-      overrides: [databaseServiceProvider.overrideWithValue(databaseService)],
+      overrides: [
+        databaseServiceProvider.overrideWithValue(databaseService),
+        geolocatorServiceProvider.overrideWithValue(geolocatorService),
+        geocodingServiceProvider.overrideWithValue(geocodingService),
+      ],
     );
   });
 
@@ -96,6 +109,21 @@ void main() {
       expect(listLocation[0].placemark?.street, locations[2].placemark?.street);
       expect(listLocation[1].placemark?.street, locations[1].placemark?.street);
       expect(listLocation[2].placemark?.street, locations[0].placemark?.street);
+    },
+  );
+
+  test(
+    'Memastikan bahwa addListLocation menambahkan fake lokasi ke list',
+    () async {
+      await container
+          .read(listLocationProvider.notifier)
+          .addListLocation(false);
+      final list = await container.read(listLocationProvider.future);
+      expect(list.length, 1);
+      expect(list.first.placemark?.street, "Jl Urip");
+      expect(list.first.position.latitude, -6.2);
+      expect(list.first.position.longitude, 106.8);
+      expect(list.first.position.accuracy, 10.0);
     },
   );
 }
