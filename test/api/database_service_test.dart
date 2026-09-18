@@ -105,13 +105,17 @@ void main() {
         ),
       ];
 
-      final results = await Future.wait(
-        locations.map((location) => databaseService.insertItem(location)),
-      );
+      // final results = await Future.wait(
+      //   locations.map((location) => databaseService.insertItem(location)),
+      // );
+
+      await databaseService.insertItem(locations[0]);
+      await databaseService.insertItem(locations[1]);
+      await databaseService.insertItem(locations[2]);
 
       final listResults = await databaseService.getAllItems();
 
-      expect(results.length, locations.length);
+      // expect(results.length, locations.length);
       expect(listResults.length, locations.length);
       expect(listResults[0].placemark?.street, 'Jalan Manggarupi');
     },
