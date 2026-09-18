@@ -1,8 +1,10 @@
 # TraceLog 📍
 
+[![CI](https://github.com/pakdhel/tracelog-app/actions/workflows/ci.yml/badge.svg)](https://github.com/pakdhel/tracelog-app/actions/workflows/ci.yml)
+
 TraceLog adalah aplikasi mobile location history & auto-tracker yang dibangun menggunakan Flutter. Project ini dibuat sebagai media belajar sekaligus portofolio, dengan fokus pada penerapan praktik pengembangan Flutter modern — mulai dari state management, local persistence, background execution di Android, hingga desain sistem tema terpusat.
 
-> ✅ **Status:** Pencatatan lokasi manual & otomatis (background service), local storage (sqflite), auto-tracking toggle, preview peta, dark/light theme, search & filter lokasi, serta hapus entry sudah berfungsi penuh. Selanjutnya: unit test dan CI/CD.
+> ✅ **Status:** Pencatatan lokasi manual & otomatis (background service), local storage (sqflite), auto-tracking toggle, preview peta, dark/light theme, search & filter lokasi, hapus entry, automated testing (unit, widget, database, provider), serta CI dengan GitHub Actions sudah berfungsi penuh. Selanjutnya: dukungan iOS untuk background execution.
 
 ## ✨ Tentang Project
 
@@ -14,6 +16,8 @@ TraceLog dibangun bukan sekadar untuk menghasilkan aplikasi yang jadi, tapi untu
 - Exception handling terstruktur dengan **sealed class**
 - Design system yang terstruktur (colors, typography, theming terpusat, light & dark)
 - Integrasi peta interaktif dengan **flutter_map** (OpenStreetMap)
+- Automated testing di berbagai lapisan (unit, widget, database, provider) dengan fake service dan in-memory database
+- Continuous Integration dengan **GitHub Actions**
 
 ## 🛠️ Tech Stack
 
@@ -21,10 +25,11 @@ TraceLog dibangun bukan sekadar untuk menghasilkan aplikasi yang jadi, tapi untu
 - **Riverpod** — state management (`AsyncNotifier`, `AsyncValue`)
 - **geolocator** & **geocoding** — akses lokasi device & reverse geocoding
 - **workmanager** — penjadwalan background task (auto-tracking)
-- **sqflite** — database lokal untuk riwayat lokasi
+- **sqflite** (+ `sqflite_common_ffi` untuk testing) — database lokal untuk riwayat lokasi
 - **shared_preferences** — penyimpanan pengaturan tema & auto-tracking
 - **flutter_map** + **latlong2** — preview peta interaktif (OpenStreetMap)
 - **google_fonts** — font Arimo & Inconsolata
+- **GitHub Actions** — CI, menjalankan seluruh test otomatis di setiap push/PR
 
 ## 🎨 Desain
 
@@ -56,7 +61,7 @@ lib/
 ├── api/                          # GeolocatorService, GeocodingService, DatabaseService, SharedPreferencesService
 ├── models/
 │   └── location_entry.dart       # LocationEntry (+ toJson/fromJson untuk sqflite)
-├── providers/                    # ListLocationNotifier, AutoTrackNotifier, ThemeNotifier
+├── providers/                    # ListLocationNotifier, AutoTrackNotifier, ThemeNotifier, DateFilterNotifier
 ├── screens/
 │   ├── home_screen.dart
 │   └── widgets/                  # ListtileLocationWidget, LocationDetailSheet, MapPreviewWidget, dll.
@@ -67,6 +72,16 @@ lib/
 │   └── coordinates_convertion.dart
 ├── background_service.dart       # callbackDispatcher untuk WorkManager
 └── main.dart
+
+test/
+├── api/                          # DatabaseService (in-memory, sqflite_common_ffi)
+├── models/                       # LocationEntry serialization
+├── providers/                    # DateFilterNotifier, ListLocationNotifier (fake services)
+├── screens/                      # HomeScreen, ListtileLocationWidget, LabelWidget
+└── utils/                        # DateHelper, CoordinatesConvertion
+
+.github/workflows/
+└── ci.yml                        # GitHub Actions — flutter pub get + flutter test
 ```
 
 ## 🚀 Roadmap
@@ -86,8 +101,13 @@ lib/
 - [x] Dark/light/system theme, tersimpan otomatis
 - [x] Search lokasi berdasarkan alamat (real-time, case-insensitive) dan filter chip 7 hari terakhir, keduanya bisa dikombinasikan
 - [x] Hapus entry lokasi
-- [ ] Unit test & widget test
-- [ ] Setup CI dengan GitHub Actions
+
+**Quality & Tooling**
+- [x] Unit test (util functions, model serialization)
+- [x] Widget test (dengan `ProviderScope` untuk widget yang terhubung Riverpod)
+- [x] Database test dengan `sqflite_common_ffi` (in-memory, terisolasi per test)
+- [x] Provider/notifier test dengan `ProviderContainer`, `overrides`, dan fake service (geolocator & geocoding)
+- [x] CI dengan GitHub Actions — seluruh test dijalankan otomatis di setiap push/PR ke `main`
 - [ ] Dukungan iOS untuk background execution
 
 ## ⚠️ Known Limitations
@@ -97,7 +117,7 @@ Project ini masih tahap belajar, bukan rilis produksi yang siap dipublikasikan. 
 - **Frequency background task masih nilai testing** — perlu diubah ke interval 24 jam sebelum dipakai di kondisi nyata, saat ini masih diset pendek untuk mempercepat pengujian.
 - **Dependency `workmanager` dari branch `main` git**, bukan rilis stabil di pub.dev — perlu dipantau untuk breaking change, karena belum ada rilis resmi yang mencakup fix yang dibutuhkan saat project ini dibuat.
 - **Android only** — setup background execution untuk iOS belum dikonfigurasi maupun diuji.
-- **Belum ada automated test.**
+- **Belum ada CD (Continuous Deployment)** — CI baru menjalankan test; build & distribusi APK otomatis belum disiapkan.
 
 ## 🏃 Cara Menjalankan Project
 
@@ -109,6 +129,12 @@ flutter run
 ```
 
 Izin lokasi dan pengecualian battery-optimization perlu diberikan manual di device agar background tracking berjalan andal — lihat `AndroidManifest.xml` untuk daftar permission yang dideklarasikan.
+
+### Menjalankan test
+
+```bash
+flutter test
+```
 
 ## 👤 Author
 
