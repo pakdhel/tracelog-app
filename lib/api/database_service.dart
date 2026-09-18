@@ -6,7 +6,7 @@ class DatabaseService {
 
   DatabaseService({String? databaseName})
     : _databaseName = databaseName ?? 'locationHistoryList.db';
-    
+
   static const String _tableName = 'location_history';
   static const int _version = 1;
 
@@ -60,5 +60,10 @@ class DatabaseService {
       whereArgs: [id],
     );
     return result;
+  }
+
+  Future<void> closeDb() async {
+    final db = await _initializedDb();
+    await db.close();
   }
 }

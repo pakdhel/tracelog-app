@@ -36,7 +36,8 @@ void main() {
     );
   });
 
-  tearDown(() {
+  tearDown(() async {
+    await databaseService.closeDb();
     container.dispose();
   });
 

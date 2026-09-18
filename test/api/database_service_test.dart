@@ -16,6 +16,10 @@ void main() {
     databaseService = DatabaseService(databaseName: inMemoryDatabasePath);
   });
 
+  tearDown(() async {
+    await databaseService.closeDb();
+  });
+
   test(
     '''
       DatabaseService.insertItem harusnya mengembalikan 
@@ -116,7 +120,7 @@ void main() {
       final listResults = await databaseService.getAllItems();
 
       // expect(results.length, locations.length);
-      expect(listResults.length, locations.length);
+      expect(listResults.length, 3);
       expect(listResults[0].placemark?.street, 'Jalan Manggarupi');
     },
   );
