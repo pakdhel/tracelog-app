@@ -126,4 +126,86 @@ void main() {
       expect(list.first.position.accuracy, 10.0);
     },
   );
+
+  test(
+    '''
+    Memastikan removeLocationById berhasil menghapus 
+    satu item lokasi berdasarkan id dari list
+    ''',
+    () async {
+      final List<LocationEntry> locations = [
+        LocationEntry(
+          placemark: Placemark(street: 'Jalan Urip'),
+          position: Position(
+            longitude: 0.0,
+            latitude: 0.0,
+            timestamp: DateTime.now(),
+            accuracy: 0.0,
+            altitude: 0.0,
+            altitudeAccuracy: 0.0,
+            heading: 0.0,
+            headingAccuracy: 0.0,
+            speed: 0.0,
+            speedAccuracy: 0.0,
+          ),
+          dateTime: DateTime.now(),
+          isAutoTracked: false,
+        ),
+        LocationEntry(
+          placemark: Placemark(street: 'Jalan Pettarani'),
+          position: Position(
+            longitude: 0.0,
+            latitude: 0.0,
+            timestamp: DateTime.now(),
+            accuracy: 0.0,
+            altitude: 0.0,
+            altitudeAccuracy: 0.0,
+            heading: 0.0,
+            headingAccuracy: 0.0,
+            speed: 0.0,
+            speedAccuracy: 0.0,
+          ),
+          dateTime: DateTime.now(),
+          isAutoTracked: false,
+        ),
+        LocationEntry(
+          placemark: Placemark(street: 'Jalan Manggarupi'),
+          position: Position(
+            longitude: 0.0,
+            latitude: 0.0,
+            timestamp: DateTime.now(),
+            accuracy: 0.0,
+            altitude: 0.0,
+            altitudeAccuracy: 0.0,
+            heading: 0.0,
+            headingAccuracy: 0.0,
+            speed: 0.0,
+            speedAccuracy: 0.0,
+          ),
+          dateTime: DateTime.now(),
+          isAutoTracked: false,
+        ),
+      ];
+
+      final listId = await Future.wait(
+        locations.map((location) => databaseService.insertItem(location)),
+      );
+
+      // int idTobeRemoved = 1;
+
+      await container
+          .read(listLocationProvider.notifier)
+          .removeLocationById(listId[0]);
+
+      final listLocations = await container.read(listLocationProvider.future);
+
+      final contains = listLocations
+          .where((test) => test.id == listId[0])
+          .toList();
+
+      expect(listLocations[0].id, 3);
+      expect(listLocations[1].id, 2);
+      expect(contains.length, 0);
+    },
+  );
 }
